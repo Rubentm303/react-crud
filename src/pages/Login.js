@@ -1,14 +1,56 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
+import { useDb } from '../context/dbContext';
+import Swal from 'sweetalert2'
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
+    const { loginFunction } = useDb();
+    const [user, setUser] = useState({
+        email: '',
+        password: '',
+    });
+    const navigate = useNavigate();
+
+    const handleChange = ({target: {name, value}}) => {
+        setUser({
+            ...user,
+            [name]: value
+        })
+    }
+
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            await loginFunction(user.email, user.password);
+            Swal.fire({
+                icon: 'success',
+                title: 'Éxito!',
+                text: 'Bienvenido!'
+            });
+            navigate('/');
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: `${error}`
+            })
+        }
+    } 
+
+
+
+    useEffect(() => {
+    }, [])
+    
   return (
     <div>
         <div className='flex justify-center h-screen'>
             <div className='hidden lg:block lg:w-2/3 bg-1'>
                 <div className='flex items-center h-full px-20 bg-[#664494] bg-opacity-70'>
                     <div>
-                        <h2>CI Nicaragua</h2>
-                        <p>Esto es un Login</p>
+                        <h2 className='font-bold text-white text-2xl'>CRUD - React</h2>
+                        <p className='text-white text-2xl'>Esto es un Login</p>
                     </div>
                 </div>
             </div>
@@ -24,12 +66,13 @@ const Login = () => {
                     </div>
 
                     <div className='mt-8'>
-                        <form>
+                        <form onSubmit={handleSubmit}>
                             <div>
                                <label className='block mb-2 text-sm text-gray-600'>
                                     Correo Electrónico
                                 </label> 
                                 <input
+                                    onChange={handleChange}
                                     type='email'
                                     name='email'
                                     id='email'
@@ -44,6 +87,7 @@ const Login = () => {
                                     Contraseña
                                 </label> 
                                 <input
+                                    onChange={handleChange}
                                     type='password'
                                     name='password'
                                     id='password'

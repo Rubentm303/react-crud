@@ -1,8 +1,12 @@
 import React from 'react'
+import { Form } from 'react-router-dom'
+import FormAnime from '../componets/Form'
 
 const Home = () => {
   return (
-    <div>Home</div>
+    <div>
+      <FormAnime/>
+    </div>
   )
 }
 
